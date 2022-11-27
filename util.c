@@ -35,6 +35,5 @@ void adding_info(AVL* tree){
         GAME* game = add_game(string);
         avl_insert(tree,game);
     }
-    binary_tree_pre_order(tree);
     return;
 }
