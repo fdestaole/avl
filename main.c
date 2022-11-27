@@ -18,9 +18,8 @@ void operations(AVL* tree){
     NODE* root = return_root(tree);
     int removable;
 
-    while(strcmp(string,"F") == 0){
+    while(strcmp(string,"F") != 0){
         removable = atoi(string);
-        root = del(search_node(root,removable),removable);
         string = readLine();
     }
     pre_order_recursion(root);
