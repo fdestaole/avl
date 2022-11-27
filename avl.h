@@ -22,6 +22,5 @@ NODE* insert_node(NODE* root,GAME* game);
 void avl_delete(AVL** tree);
 AVL *avl_create();
 bool avl_insert(AVL* tree,GAME* game);
-NODE* del(NODE* root, int year);
 
 #endif //EX_7_AVL_H
