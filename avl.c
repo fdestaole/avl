@@ -193,43 +193,7 @@ bool avl_insert(AVL* tree, GAME* game) {
     tree->root = avl_inserir_no_e_rotacionar(tree->root, game);
     return tree->root != NULL;
 }
-NODE* del(NODE* root, int year)
-{
-    if(root == NULL)
-        return NULL;
-    if(year < return_year(root->game))
-        root->left = del(root->left, year);
-    else
-    if(year > return_year(root->game))
-        root->right = del(root->right, year);
-    else
-    {
-        NODE* aux = root;
-        if((root->left) != NULL && (root->right)!= NULL)
-        {
-            NODE* parent = root->right;
-            root = parent->left;
-            if (root != NULL)
-            {
-                while(root->left)
-                {
-                    parent = root;
-                    root = root->left;
-                }
-                parent->left = root->right;
-                root->right = aux->right;
-            }
-            else
-                root = parent;
-            root->left = aux->left;
-        }
-        else if(root->left)
-            root = root->left;
-        else
-            root = root->right;
-    }
-    return root;
-}
+
 
 
 
