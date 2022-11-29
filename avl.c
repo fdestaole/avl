@@ -25,6 +25,8 @@ static NODE *select_and_rotate(NODE *root, GAME *game);
 
 static NODE *insert_node(NODE *root, GAME *game);
 
+//NODE* search_node(NODE* root, int year);
+
 struct node_st
 {
     GAME *game;
@@ -315,3 +317,19 @@ void avl_print_2d(AVL *tree)
     // Pass initial space count as 0
     print2DUtil(tree->root, 0);
 }
+
+/*NODE* search_node(NODE* root, int year){
+    if(root == NULL) {
+        return NULL;
+    }
+    if(year == return_year(root->game) {
+        return root;
+    }
+    if(year < return_year(root->game) {
+        return (search_node(root->left, year));
+    }
+    else {
+        return (search_node(root->right, year));
+    }
+}
+*/
