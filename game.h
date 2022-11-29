@@ -1,6 +1,8 @@
 #ifndef EX_7_GAME_H
 #define EX_7_GAME_H
 
+#include <stdbool.h>
+
 typedef struct game_st GAME;
 
 GAME* create_game();

@@ -7,7 +7,7 @@ void operations(AVL* tree);
 
 int main(){
 
-    AVL* tree = avl_criar();
+    AVL* tree = avl_create();
     adding_info(tree);
 
     return 0;

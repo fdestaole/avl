@@ -8,189 +8,191 @@
 typedef struct node_st NODE;
 
 void pre_order_recursion(NODE* root);
-static void avl_apagar_aux(NODE **raiz);
-static NODE *avl_inserir_no_e_rotacionar(NODE *raiz, GAME* game);
+static void avl_delete_aux(NODE **root);
+static NODE *avl_insert_node_and_rotate(NODE *root, GAME* game);
 
-static bool DesbalanceamentoEhNegativo(NODE *raiz);
+static bool negative_unbalance(NODE *root);
 
-static bool DesbalanceamentoEhPositivo(NODE *raiz);
+static bool positive_unbalance(NODE *root);
 
-static bool ItemEhMaior(const NODE *raiz, GAME *game);
+static bool IsBigger(const NODE *root, GAME *game);
 
-static bool ItemEhMenor(const NODE *raiz, GAME *game);
+static bool IsSmaller(const NODE *root, GAME *game);
 
-static NODE *selecionar_e_executar_rotacao(NODE *raiz, GAME *game);
+static NODE *select_and_rotate(NODE *root, GAME *game);
 
-static NODE *inserir_no(NODE *raiz, GAME *game);
+static NODE *insert_node(NODE *root, GAME *game);
 
 struct node_st
 {
     GAME* game;
-    NODE *direita;
-    NODE *esquerda;
-    int altura;
+    NODE *right;
+    NODE *left;
+    int height;
 };
 
 struct avl
 {
-    NODE* raiz;
-    int profundidade;
+    NODE* root;
+    int depth;
 };
 
 void binary_tree_pre_order(AVL* tree){
-    pre_order_recursion(tree->raiz);
+    pre_order_recursion(tree->root);
 }
 void pre_order_recursion(NODE* root){
     if (root != NULL) {
         printf("%s\n", return_name(root->game));
-        pre_order_recursion(root->esquerda);
-        pre_order_recursion(root->direita);
-    }
-}
-AVL *avl_criar() {
-    AVL *arvore = (AVL *) malloc(sizeof(AVL));
-    if (arvore != NULL) {
-        arvore->raiz = NULL;
-        arvore->profundidade = -1;
-    }
-    return arvore;
-}
-
-static void avl_apagar_aux(NODE **raiz) {
-    if (*raiz != NULL) {
-        avl_apagar_aux(&((*raiz)->esquerda));
-        avl_apagar_aux(&((*raiz)->direita));
-        free_game(&(*raiz)->game);
-        free(*raiz);
+        pre_order_recursion(root->left);
+        pre_order_recursion(root->right);
     }
 }
 
-void avl_apagar(AVL **arvore) {
-    avl_apagar_aux(&(*arvore)->raiz);
-    free(*arvore);
-    *arvore = NULL;
+AVL *avl_create() {
+    AVL *tree = (AVL *) malloc(sizeof(AVL));
+    if (tree != NULL) {
+        tree->root = NULL;
+        tree->depth = -1;
+    }
+    return tree;
 }
 
-int avl_altura_no(NODE* raiz) {
-    if (raiz == NULL) {
+static void avl_delete_aux(NODE **root) {
+    if (*root != NULL) {
+        avl_delete_aux(&((*root)->left));
+        avl_delete_aux(&((*root)->right));
+        free_game(&(*root)->game);
+        free(*root);
+    }
+}
+
+void avl_delete(AVL **tree) {
+    avl_delete_aux(&(*tree)->root);
+    free(*tree);
+    *tree = NULL;
+}
+
+int avl_height_node(NODE* root) {
+    if (root == NULL) {
         return -1;
     } else {
-        return raiz->altura;
+        return root->height;
     }
 }
 
-NODE *avl_cria_no(GAME* game) {
-    NODE *no = (NODE *) malloc(sizeof (NODE));
-    if (no != NULL) {
-        no->altura = 0;
-        no->direita = NULL;
-        no->esquerda = NULL;
-        no->game = game;
+NODE *avl_create_node(GAME* game) {
+    NODE *new = (NODE *) malloc(sizeof (NODE));
+    if (new != NULL) {
+        new->height = 0;
+        new->right = NULL;
+        new->left = NULL;
+        new->game = game;
     }
-    return no;
+    return new;
 }
 
-NODE *rodar_direita(NODE *a) {
-    NODE *b = a->esquerda;
-    a->esquerda = b->direita;
-    b->direita = a;
+NODE *rotate_right(NODE *a) {
+    NODE *b = a->left;
+    a->left = b->right;
+    b->right = a;
 
-    a->altura = max(avl_altura_no(a->esquerda),
-                    avl_altura_no(a->direita)) + 1;
-    b->altura = max(avl_altura_no(b->esquerda),
-                    a->altura) + 1;
+    a->height = max(avl_height_node(a->left),
+                    avl_height_node(a->right)) + 1;
+    b->height = max(avl_height_node(b->left),
+                    a->height) + 1;
     return b;
 }
 
-NODE *rodar_esquerda(NODE *a) {
-    NODE *b = a->direita;
-    a->direita = b->esquerda;
-    b->esquerda = a;
+NODE *rotate_left(NODE *a) {
+    NODE *b = a->right;
+    a->right = b->left;
+    b->left = a;
 
-    a->altura = max(avl_altura_no(a->esquerda),
-                    avl_altura_no(a->direita)) + 1;
-    b->altura = max(avl_altura_no(b->direita),
-                    a->altura) + 1;
+    a->height = max(avl_height_node(a->left),
+                    avl_height_node(a->right)) + 1;
+    b->height = max(avl_height_node(b->right),
+                    a->height) + 1;
     return b;
 }
 
-NODE *rodar_esquerda_direita(NODE *a)   {
-    a->esquerda = rodar_esquerda(a->esquerda);
-    return rodar_direita(a);
+NODE *rotate_left_right(NODE *a)   {
+    a->left = rotate_left(a->left);
+    return rotate_right(a);
 }
 
-NODE *rodar_direita_esquerda(NODE *a)   {
-    a->direita = rodar_direita(a->direita);
-    return rodar_esquerda(a);
+NODE *rotate_right_left(NODE *a)   {
+    a->right = rotate_right(a->right);
+    return rotate_left(a);
 }
 
-static NODE *avl_inserir_no_e_rotacionar(NODE *raiz, GAME* game) {
-    raiz = inserir_no(raiz, game);
+static NODE *avl_insert_node_and_rotate(NODE *root, GAME* game) {
+    root = insert_node(root, game);
 
-    raiz->altura = max(avl_altura_no(raiz->esquerda),
-                       avl_altura_no(raiz->direita)) + 1;
+    root->height = max(avl_height_node(root->left),
+                       avl_height_node(root->right)) + 1;
 
-    raiz = selecionar_e_executar_rotacao(raiz, game);
+    root = select_and_rotate(root, game);
 
-    return raiz;
+    return root;
 }
 
-//TODO: resolver problema do item const
-static NODE *inserir_no(NODE *raiz, GAME *game) {
-    if (raiz == NULL) {
-        raiz = avl_cria_no(game);
+static NODE *insert_node(NODE *root, GAME *game) {
+    if (root == NULL) {
+        root = avl_create_node(game);
     }
-    else if (ItemEhMaior(raiz,game)) {
-        raiz->direita = avl_inserir_no_e_rotacionar(raiz->direita, game);
+    else if (IsBigger(root,game)) {
+        root->right = avl_insert_node_and_rotate(root->right, game);
     }
-    else if (ItemEhMenor(raiz, game)) {
-        raiz->esquerda = avl_inserir_no_e_rotacionar(raiz->esquerda, game);
+    else if (IsSmaller(root, game)) {
+        root->left = avl_insert_node_and_rotate(root->left, game);
     }
-    return raiz;
+    return root;
 }
 
-static NODE *selecionar_e_executar_rotacao(NODE *raiz, GAME* game) {
-    if (DesbalanceamentoEhNegativo(raiz)) {
-        if (ItemEhMaior(raiz->direita, game)) {
-            raiz = rodar_esquerda(raiz);
+static NODE *select_and_rotate(NODE *root, GAME* game) {
+    if (negative_unbalance(root)) {
+        if (IsBigger(root->right, game)) {
+            root = rotate_left(root);
         }
         else {
-            raiz = rodar_direita_esquerda(raiz);
+            root = rotate_right_left(root);
         }
     }
 
-    if (DesbalanceamentoEhPositivo(raiz)) {
-        if (ItemEhMenor(raiz->esquerda, game))
-            raiz = rodar_direita(raiz);
-        else
-            raiz = rodar_esquerda_direita(raiz);
+    if (positive_unbalance(root)) {
+        if (IsSmaller(root->left, game)) {
+            root = rotate_right(root);
+        }
+        else {
+            root = rotate_left_right(root);
+        }
     }
-    return raiz;
+    return root;
 }
 
-static bool ItemEhMenor(const NODE *raiz, GAME* game) {
-    if (return_year(game) != return_year(raiz->game))return return_year(game) < return_year(raiz->game);
-    else return strlen(return_name(game)) < strlen(return_name(raiz->game));
+static bool IsSmaller(const NODE *root, GAME* game) {
+    if (return_year(game) != return_year(root->game))return return_year(game) < return_year(root->game);
+    else return strcmp(return_name(game), return_name(root->game)) > 0;
 }
 
-static bool ItemEhMaior(const NODE *raiz, GAME* game) {
-    if (return_year(game) != return_year(raiz->game))return return_year(game) > return_year(raiz->game);
-    else return strlen(return_name(game)) > strlen(return_name(raiz->game));
+static bool IsBigger(const NODE *root, GAME* game) {
+    if (return_year(game) != return_year(root->game))return return_year(game) > return_year(root->game);
+    else return strcmp(return_name(game), return_name(root->game)) < 0;
 }
 
-static bool DesbalanceamentoEhPositivo(NODE *raiz) {
-    return avl_altura_no(raiz->esquerda)
-               - avl_altura_no(raiz->direita) == 2;
+static bool positive_unbalance(NODE *root) {
+    return avl_height_node(root->left)
+               - avl_height_node(root->right) == 2;
 }
 
-static bool DesbalanceamentoEhNegativo(NODE *raiz) {
-    return avl_altura_no(raiz->esquerda)
-               - avl_altura_no(raiz->direita) == -2;
+static bool negative_unbalance(NODE *root) {
+    return avl_height_node(root->left)
+               - avl_height_node(root->right) == -2;
 }
 
-boolean avl_inserir(AVL *arvore, GAME* game) {
-    arvore->raiz = avl_inserir_no_e_rotacionar(arvore->raiz,game);
-    return arvore->raiz != NULL;
+bool avl_insert(AVL *tree, GAME* game) {
+    tree->root = avl_insert_node_and_rotate(tree->root,game);
+    return tree->root != NULL;
 }
 
 
