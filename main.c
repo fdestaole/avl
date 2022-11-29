@@ -15,7 +15,9 @@ int main(){
     avl_print_2d(tree);
 
     scanf("%d",&option);
-
+    
+    //operations(tree);
+    
     print_avl(tree, option);
 
     return 0;
@@ -23,13 +25,12 @@ int main(){
 
 void operations(AVL* tree){
     char* string = readLine();
-    // int removable;
+    //int removable;
 
     while(strcmp(string,"F") == 0){
-        // removable = atoi(string);
+        //removable = atoi(string);
+        //avl_remove(tree,removable);
         string = readLine();
     }
-    binary_tree_pre_order(tree);
-
     return;
 }
