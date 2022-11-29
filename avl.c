@@ -333,3 +333,71 @@ void avl_print_2d(AVL *tree)
     }
 }
 */
+
+NODE *deleteNode(NODE *root, GAME *game)
+{
+    
+    if (root == NULL)
+        return root;
+
+    if (IsSmaller(root, game))
+        root->left = deleteNode(root->left, game);
+
+    else if (IsBigger(root, game))
+        root->right = deleteNode(root->right, game);
+
+    else
+    {
+    
+        if ((root->left == NULL) || (root->right == NULL))
+        {
+            NODE *temp = root->left ? root->left : root->right;
+
+            if (temp == NULL)
+            {
+                temp = root;
+                root = NULL;
+            }
+            else               
+                *root = *temp; 
+                               
+            free(temp);
+        }
+        else
+        {
+            NODE *temp = root->right->left < root->right->right ? root->right->left : root->right->right;
+
+            root->game = temp->game;
+
+            root->right = deleteNode(root->right, temp->game);
+        }
+    }
+
+    if (root == NULL)
+        return root;
+
+    root->height = 1 + max(avl_height_node(root->left),
+                           avl_height_node(root->right));
+
+    return select_and_rotate(root, game);
+}
+
+NODE *find_node_year(NODE *root, int year)
+{
+    if (root == NULL)
+        return NULL;
+    if (year == return_year(root->game))
+        return root;
+    if (year < return_year(root->game))
+        return (find_node_year(root->left, year));
+    else
+        return (find_node_year(root->right, year));
+}
+
+void deletar_por_ano(AVL *tree, int year)
+{
+    while (find_node_year(tree->root, year) != NULL)
+    {
+        tree->root = deleteNode(tree->root, find_node_year(tree->root, year)->game);
+    }
+}
