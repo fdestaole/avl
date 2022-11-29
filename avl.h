@@ -11,5 +11,7 @@ void avl_delete(AVL **arvore);
 AVL *avl_create();
 void binary_tree_pre_order(AVL* tree);
 bool avl_insert(AVL *arvore, GAME* game);
+void print_avl(AVL *tree, int option);
+void avl_print_2d(AVL *tree);
 
 #endif //TADGENERICO_AVL_H
