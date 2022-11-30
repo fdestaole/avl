@@ -25,7 +25,10 @@ static NODE *select_and_rotate(NODE *root, GAME *game);
 
 static NODE *insert_node(NODE *root, GAME *game);
 
-//NODE* search_node(NODE* root, int year);
+NODE *deleteNode(NODE *root, GAME *game);
+
+NODE *find_node_year(NODE *root, int year);
+
 
 struct node_st
 {
@@ -96,6 +99,9 @@ void print_avl(AVL *tree, int option)
     case 3:
         binary_tree_post_order(tree);
         break;
+    case 4:
+    	avl_print_2d(tree); 
+    	break;   
     default:
         printf("Invalid option!\n");
         break;

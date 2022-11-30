@@ -24,7 +24,7 @@ char* readLine() {
 }
 void adding_info(AVL* tree){
     FILE* file = NULL;
-    char* string = (char*)malloc(150*sizeof(char));
+    char* string = (char*)malloc(120*sizeof(char));
     GAME* game = NULL;
 
     file = fopen("CSV.csv","r");
@@ -33,10 +33,11 @@ void adding_info(AVL* tree){
         exit(1);
     }
     fseek(file,3,SEEK_SET);
-    while(fgets(string,150,file) != NULL){
-    	game = add_game(strdup(string));
+    while(fgets(string,120,file) != NULL){
+    	game = add_game(string);
         avl_insert(tree,game);
     }
-    if(string != NULL) free(string);
+    fclose(file);
+    free(string);
     return;
 }

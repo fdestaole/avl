@@ -15,7 +15,7 @@ valgrind:
 	valgrind --tool=memcheck --leak-check=full  --track-origins=yes --show-leak-kinds=all --show-reachable=yes ./$(BINARY)
 
 zip:
-	zip entrega.zip *.c *.h CSV-TodosJogos.csv makefile
+	zip entrega.zip *.c *.h README.txt makefile
 
 clean:
 	@rm *.o

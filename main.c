@@ -4,20 +4,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void operations(AVL *tree);
-
 int main()
 {
     AVL *tree = avl_create();
     int option;
-    char *string;
     int ano;
+    char* string;
 
     adding_info(tree);
 
     scanf("%d", &option);
-    scanf("%*c");
-    scanf("%*c");
+    while(getchar() != '\n');
+    
     do{
         string = readLine();
         ano = atoi(string);
@@ -25,4 +23,8 @@ int main()
     } while (strcmp(string, "F") != 0);
 
     print_avl(tree, option);
+    free(string);
+    avl_delete(&tree);
+    
+    return 0;
 }

@@ -23,13 +23,15 @@ GAME* add_game(char* string){
     GAME* structure = create_game();
 
     char* aux = strtok(string,";");
-    structure->name = aux;
+    structure->name = malloc(strlen(aux) + 1);
+    strcpy(structure->name, aux);
 
     aux = strtok(NULL,";");
     structure->year = atoi(aux);
 
     aux = strtok(NULL,"\0");
-    structure->company = aux;
+    structure->company = malloc(strlen(aux) + 1);
+    strcpy(structure->company, aux);
 
     return structure;
 }
