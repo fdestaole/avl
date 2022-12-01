@@ -14,6 +14,7 @@ int main()
     adding_info(tree);
 
     scanf("%d", &option);
+    avl_print_2d(tree);
     while(getchar() != '\n');
     
     do{

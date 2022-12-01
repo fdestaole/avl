@@ -27,7 +27,8 @@ void adding_info(AVL* tree){
     char* string = (char*)malloc(120*sizeof(char));
     GAME* game = NULL;
 
-    file = fopen("CSV.csv","r");
+    // file = fopen("CSV.csv","r");
+    file = fopen("CSV-TodosJogos.csv","r");
     if(file == NULL){
         printf("ERROR opening the file!\n");
         exit(1);

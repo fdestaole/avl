@@ -29,7 +29,6 @@ NODE *deleteNode(NODE *root, GAME *game);
 
 NODE *find_node_year(NODE *root, int year);
 
-
 struct node_st
 {
     GAME *game;
@@ -100,8 +99,8 @@ void print_avl(AVL *tree, int option)
         binary_tree_post_order(tree);
         break;
     case 4:
-    	avl_print_2d(tree); 
-    	break;   
+        avl_print_2d(tree);
+        break;
     default:
         printf("Invalid option!\n");
         break;
@@ -324,28 +323,25 @@ void avl_print_2d(AVL *tree)
     print2DUtil(tree->root, 0);
 }
 
-/*NODE* search_node(NODE* root, int year){
-    if(root == NULL) {
-        return NULL;
-    }
-    if(year == return_year(root->game) {
-        return root;
-    }
-    if(year < return_year(root->game) {
-        return (search_node(root->left, year));
-    }
-    else {
-        return (search_node(root->right, year));
-    }
+NODE *minValueNode(NODE *node)
+{
+    NODE *current = node;
+
+    /* loop down to find the leftmost leaf */
+    while (current->left != NULL)
+        current = current->left;
+
+    return current;
 }
-*/
 
 NODE *deleteNode(NODE *root, GAME *game)
 {
-    
+    printf("root %d %c\n", return_year(root->game), return_name(root->game)[0]);
+    printf("game %d %c\n", return_year(game), return_name(game)[0]);
     if (root == NULL)
+    {
         return root;
-
+    }
     if (IsSmaller(root, game))
         root->left = deleteNode(root->left, game);
 
@@ -354,24 +350,25 @@ NODE *deleteNode(NODE *root, GAME *game)
 
     else
     {
-    
+
         if ((root->left == NULL) || (root->right == NULL))
         {
             NODE *temp = root->left ? root->left : root->right;
-
+            // nemhum filho
             if (temp == NULL)
             {
                 temp = root;
                 root = NULL;
             }
-            else               
-                *root = *temp; 
-                               
+            // um filho
+            else
+                *root = *temp;
+
             free(temp);
         }
         else
         {
-            NODE *temp = root->right->left < root->right->right ? root->right->left : root->right->right;
+            NODE *temp = minValueNode(root->right);
 
             root->game = temp->game;
 
@@ -402,8 +399,11 @@ NODE *find_node_year(NODE *root, int year)
 
 void deletar_por_ano(AVL *tree, int year)
 {
+    printf("deletar_por_ano %d", year);
     while (find_node_year(tree->root, year) != NULL)
     {
-        tree->root = deleteNode(tree->root, find_node_year(tree->root, year)->game);
+        deleteNode(tree->root, find_node_year(tree->root, year)->game);
+        printf("\nDELETEI O ANO %d\n", year);
+        avl_print_2d(tree);
     }
 }
