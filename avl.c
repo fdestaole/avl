@@ -403,7 +403,5 @@ void deletar_por_ano(AVL *tree, int year)
     while (find_node_year(tree->root, year) != NULL)
     {
         deleteNode(tree->root, find_node_year(tree->root, year)->game);
-        printf("\nDELETEI O ANO %d\n", year);
-        avl_print_2d(tree);
     }
 }
